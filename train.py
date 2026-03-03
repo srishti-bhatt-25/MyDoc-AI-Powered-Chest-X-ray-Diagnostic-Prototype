@@ -89,6 +89,7 @@ for epoch in range(epochs):
     model.eval()
     correct = 0
     total = 0
+    #we will be validating the model accuracy here
 
     with torch.no_grad():
         for images, labels in val_loader:
