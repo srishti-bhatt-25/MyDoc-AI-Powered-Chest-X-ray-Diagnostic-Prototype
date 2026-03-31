@@ -167,7 +167,7 @@ elif page == "Contact":
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("Contact Developer")
     st.write("Developed by: **Srishti Bhatt**")
-    st.write("Email: your_email_here@example.com")
+    st.write("Email: srishtibhatt100@gmail.com")
     st.write("Project: AI-powered medical image diagnostic prototype")
     st.markdown('</div>', unsafe_allow_html=True)
 
