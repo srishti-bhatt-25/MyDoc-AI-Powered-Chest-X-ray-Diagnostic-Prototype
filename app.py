@@ -116,27 +116,7 @@ if page == "Home":
                 key="normal_download"
             )
 
-    with col2:
-
-        st.image(
-            "demo_pneumonia.jpg",
-            caption="Pneumonia Sample",
-            use_container_width=True
-        )
-
-        if st.button("Use Pneumonia Demo"):
-            selected_image = Image.open(
-                "demo_pneumonia.jpg"
-            ).convert("RGB")
-
-        with open("demo_pneumonia.jpg", "rb") as file:
-            st.download_button(
-                "Download",
-                file,
-                "demo_pneumonia.jpg",
-                key="pneumonia_download"
-            )
-
+    
 # ---------------- IMAGE SELECTION ----------------
     image = None
 
