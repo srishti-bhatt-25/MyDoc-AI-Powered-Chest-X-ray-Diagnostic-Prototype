@@ -125,11 +125,6 @@ if page == "Home":
 
         st.divider()
 
-        st.image(
-            image,
-            caption="Selected Image",
-            width=400
-        )
         input_tensor = transform(image).unsqueeze(0).to(device)
 
         gradients = []
