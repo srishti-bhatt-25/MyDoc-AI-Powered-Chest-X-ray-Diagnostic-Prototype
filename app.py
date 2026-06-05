@@ -72,68 +72,207 @@ transform = transforms.Compose([
                          [0.229, 0.224, 0.225])
 ])
 
+```python
 # ------------------ HOME PAGE ------------------
 if page == "Home":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("Upload Chest X-ray")
-    uploaded_file = st.file_uploader("Choose an X-ray image", type=["jpg", "jpeg", "png"])
 
-    if uploaded_file is not None:
+    st.subheader("Quick Demo")
+
+    st.info(
+        "Don't have a chest X-ray? Try one of our sample images or download them."
+    )
+
+    selected_image = None
+
+    col1, col2 = st.columns(2)
+
+    # ---------- NORMAL DEMO ----------
+    with col1:
+
+        st.image(
+            "demo_normal.jpg",
+            caption="Normal Sample",
+            use_container_width=True
+        )
+
+        if st.button("Use Normal Demo"):
+            selected_image = Image.open(
+                "demo_normal.jpg"
+            ).convert("RGB")
+
+        with open("demo_normal.jpg", "rb") as file:
+            st.download_button(
+                label="⬇ Download",
+                data=file,
+                file_name="demo_normal.jpg",
+                mime="image/jpeg",
+                key="normal_download"
+            )
+
+    # ---------- PNEUMONIA DEMO ----------
+    with col2:
+
+        st.image(
+            "demo_pneumonia.jpg",
+            caption="Pneumonia Sample",
+            use_container_width=True
+        )
+
+        if st.button("Use Pneumonia Demo"):
+            selected_image = Image.open(
+                "demo_pneumonia.jpg"
+            ).convert("RGB")
+
+        with open("demo_pneumonia.jpg", "rb") as file:
+            st.download_button(
+                label="⬇ Download",
+                data=file,
+                file_name="demo_pneumonia.jpg",
+                mime="image/jpeg",
+                key="pneumonia_download"
+            )
+
+    st.divider()
+
+    st.subheader("Upload Chest X-ray")
+
+    uploaded_file = st.file_uploader(
+        "Choose an X-ray image",
+        type=["jpg", "jpeg", "png"]
+    )
+
+    image = None
+
+    if selected_image is not None:
+        image = selected_image
+
+    elif uploaded_file is not None:
         image = Image.open(uploaded_file).convert("RGB")
-        st.image(image, caption="Uploaded Image", width=400)
+
+    if image is not None:
+
+        st.image(
+            image,
+            caption="Selected Image",
+            width=400
+        )
 
         input_tensor = transform(image).unsqueeze(0).to(device)
 
         gradients = []
         activations = []
 
-        def backward_hook(module, grad_input, grad_output):
-            gradients.append(grad_output[0])
-
         def forward_hook(module, input, output):
             activations.append(output)
 
-        handle_fw = target_layer.register_forward_hook(forward_hook)
-        handle_bw = target_layer.register_backward_hook(backward_hook)
+        def backward_hook(module, grad_input, grad_output):
+            gradients.append(grad_output[0])
+
+        handle_fw = target_layer.register_forward_hook(
+            forward_hook
+        )
+
+        handle_bw = target_layer.register_full_backward_hook(
+            backward_hook
+        )
 
         output = model(input_tensor)
+
         probability = torch.sigmoid(output).item()
 
         model.zero_grad()
+
         output.backward()
 
         grads = gradients[0]
         acts = activations[0]
 
-        weights = torch.mean(grads, dim=[2,3], keepdim=True)
-        grad_cam = torch.sum(weights * acts, dim=1).squeeze()
+        weights = torch.mean(
+            grads,
+            dim=[2, 3],
+            keepdim=True
+        )
+
+        grad_cam = torch.sum(
+            weights * acts,
+            dim=1
+        ).squeeze()
 
         grad_cam = F.relu(grad_cam)
+
         grad_cam = grad_cam.cpu().detach().numpy()
-        grad_cam = (grad_cam - grad_cam.min()) / (grad_cam.max() - grad_cam.min())
 
-        heatmap = cv2.resize(grad_cam, (224, 224))
+        grad_cam = (
+            grad_cam - grad_cam.min()
+        ) / (
+            grad_cam.max() - grad_cam.min() + 1e-8
+        )
+
+        heatmap = cv2.resize(
+            grad_cam,
+            (224, 224)
+        )
+
         heatmap = np.uint8(255 * heatmap)
-        heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
 
-        original = cv2.resize(np.array(image), (224, 224))
-        superimposed = cv2.addWeighted(original, 0.6, heatmap, 0.4, 0)
+        heatmap = cv2.applyColorMap(
+            heatmap,
+            cv2.COLORMAP_JET
+        )
+
+        original = cv2.resize(
+            np.array(image),
+            (224, 224)
+        )
+
+        superimposed = cv2.addWeighted(
+            original,
+            0.6,
+            heatmap,
+            0.4,
+            0
+        )
+
+        st.warning(
+            "⚠ Educational Prototype Only. "
+            "This prediction is not a medical diagnosis "
+            "and should not replace professional healthcare advice."
+        )
 
         st.subheader("Prediction Result")
 
         if probability > 0.5:
-            st.error(f"Pneumonia Detected (Confidence: {probability*100:.2f}%)")
+
+            st.error(
+                f"Pneumonia Detected "
+                f"(Confidence: {probability * 100:.2f}%)"
+            )
+
+            st.progress(float(probability))
+
         else:
-            st.success(f"Normal (Confidence: {(1-probability)*100:.2f}%)")
+
+            st.success(
+                f"Normal "
+                f"(Confidence: {(1 - probability) * 100:.2f}%)"
+            )
+
+            st.progress(float(1 - probability))
 
         st.subheader("Model Attention (Grad-CAM)")
-        st.image(superimposed, width=400)
+
+        st.image(
+            superimposed,
+            width=400
+        )
 
         handle_fw.remove()
         handle_bw.remove()
 
     st.markdown('</div>', unsafe_allow_html=True)
+```
 
 # ------------------ ABOUT PAGE ------------------
 elif page == "About Pneumonia":
