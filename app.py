@@ -115,7 +115,11 @@ if page == "Home":
 # ---------------- IMAGE SELECTION ----------------
     image = None
 
-    if uploaded_file is not None:
+    if uploaded_file is not None and analyze_btn:
+        st.success("Analysis Complete! Scroll down to view the diagnosis report and Grad-CAM visualization.")
+
+
+
         image = Image.open(uploaded_file).convert("RGB")
 
     elif selected_image is not None:
