@@ -76,16 +76,19 @@ if page == "Home":
 
 # ---------------- UPLOAD FIRST ----------------
     st.subheader("Upload Chest X-ray")
-
     uploaded_file = st.file_uploader(
-        "Choose an X-ray image",
-        type=["jpg", "jpeg", "png"]
+    "Choose an X-ray image",
+    type=["jpg", "jpeg", "png"]
+    )
+    analyze_btn = st.button(
+    "Analyze X-ray",
+    type="primary"
     )
 
 # ---------------- DEMO SECTION ----------------
     st.subheader("Quick Demo")
     st.info(
-        "Don't have a chest X-ray? Try one of our sample images or download them."
+        "Don't have a chest X-ray? Download our Sample Image"
     )
 
     selected_image = None
