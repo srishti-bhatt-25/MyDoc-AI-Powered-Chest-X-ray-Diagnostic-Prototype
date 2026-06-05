@@ -123,10 +123,9 @@ if page == "Home":
 # ---------------- PREDICTION ----------------
     if image is not None:
         with st.spinner("Analyzing X-ray..."):
-        input_tensor = transform(image).unsqueeze(0).to(device)
-
-        gradients = []
-        activations = []
+            input_tensor = transform(image).unsqueeze(0).to(device)
+            gradients = []
+            activations = []
 
         def backward_hook(module, grad_input, grad_output):
             gradients.append(grad_output[0])
