@@ -155,6 +155,100 @@ if page == "Home":
             caption="Selected Image",
             width=400
         )
+        input_tensor = transform(image).unsqueeze(0).to(device)
+
+        gradients = []
+        activations = []
+
+        def backward_hook(module, grad_input, grad_output):
+            gradients.append(grad_output[0])
+
+        def forward_hook(module, input, output):
+            activations.append(output)
+
+        handle_fw = target_layer.register_forward_hook(forward_hook)
+        handle_bw = target_layer.register_backward_hook(backward_hook)
+
+        output = model(input_tensor)
+        probability = torch.sigmoid(output).item()
+
+        model.zero_grad()
+        output.backward()
+
+        grads = gradients[0]
+        acts = activations[0]
+
+        weights = torch.mean(grads, dim=[2, 3], keepdim=True)
+
+        grad_cam = torch.sum(
+            weights * acts,
+            dim=1
+        ).squeeze()
+
+        grad_cam = F.relu(grad_cam)
+        grad_cam = grad_cam.cpu().detach().numpy()
+
+        grad_cam = (
+            grad_cam - grad_cam.min()
+        ) / (
+            grad_cam.max() - grad_cam.min() + 1e-8
+        )
+
+        heatmap = cv2.resize(
+            grad_cam,
+            (224, 224)
+        )
+
+        heatmap = np.uint8(255 * heatmap)
+
+        heatmap = cv2.applyColorMap(
+            heatmap,
+            cv2.COLORMAP_JET
+        )
+
+        original = cv2.resize(
+            np.array(image),
+            (224, 224)
+        )
+
+        superimposed = cv2.addWeighted(
+            original,
+            0.6,
+            heatmap,
+            0.4,
+            0
+        )
+
+        st.warning(
+            "⚠ Educational Prototype Only. "
+            "This prediction is not a medical diagnosis."
+        )
+
+        st.subheader("Prediction Result")
+
+        if probability > 0.5:
+
+            st.error(
+                f"Pneumonia Detected "
+                f"(Confidence: {probability * 100:.2f}%)"
+            )
+
+        else:
+
+            st.success(
+                f"Normal "
+                f"(Confidence: {(1 - probability) * 100:.2f}%)"
+            )
+
+        st.subheader("Model Attention (Grad-CAM)")
+
+        st.image(
+            superimposed,
+            width=400
+        )
+
+        handle_fw.remove()
+        handle_bw.remove()
 
 # ------------------ ABOUT PAGE ------------------
 elif page == "About Pneumonia":
