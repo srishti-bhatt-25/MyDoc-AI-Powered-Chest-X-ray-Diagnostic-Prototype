@@ -6,9 +6,6 @@ from PIL import Image
 import numpy as np
 import cv2
 import os
-
-st.write(os.listdir("."))
-
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(page_title="MyDoc AI", layout="centered")
 
@@ -47,7 +44,7 @@ body {
 """, unsafe_allow_html=True)
 
 # ------------------ HEADER ------------------
-st.markdown('<div class="main-title">🫁 MyDoc: AI-Powered Chest X-ray Diagnostic System</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">MyDoc: AI-Powered Chest X-ray Diagnostic System</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Deep Learning Based Pneumonia Detection with Grad-CAM Visualization</div>', unsafe_allow_html=True)
 
 # ------------------ SIDEBAR ------------------
@@ -75,67 +72,7 @@ transform = transforms.Compose([
                          [0.229, 0.224, 0.225])
 ])
 # ------------------ HOME PAGE ------------------
-if page == "Home":
-
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-
-    st.subheader("Quick Demo")
-
-    st.info(
-        "Don't have a chest X-ray? Try one of our sample images or download them."
-    )
-
-    selected_image = None
-
-    col1, col2 = st.columns(2)
-
-    # ---------- NORMAL DEMO ----------
-    with col1:
-
-        st.image(
-            "demo_normal.jpg",
-            caption="Normal Sample",
-            use_container_width=True
-        )
-
-        if st.button("Use Normal Demo"):
-            selected_image = Image.open(
-                "demo_normal.jpg"
-            ).convert("RGB")
-
-        with open("demo_normal.jpg", "rb") as file:
-            st.download_button(
-                label="⬇ Download",
-                data=file,
-                file_name="demo_normal.jpg",
-                mime="image/jpeg",
-                key="normal_download"
-            )
-
-    # ---------- PNEUMONIA DEMO ----------
-    with col2:
-
-        st.image(
-            "demo_pneumonia.jpg",
-            caption="Pneumonia Sample",
-            use_container_width=True
-        )
-
-        if st.button("Use Pneumonia Demo"):
-            selected_image = Image.open(
-                "demo_pneumonia.jpg"
-            ).convert("RGB")
-
-        with open("demo_pneumonia.jpg", "rb") as file:
-            st.download_button(
-                label="⬇ Download",
-                data=file,
-                file_name="demo_pneumonia.jpg",
-                mime="image/jpeg",
-                key="pneumonia_download"
-            )
-
-    st.divider()
+ st.divider()
 
     st.subheader("Upload Chest X-ray")
 
@@ -273,6 +210,64 @@ if page == "Home":
         handle_bw.remove()
 
     st.markdown('</div>', unsafe_allow_html=True)
+if page == "Home":
+    st.subheader("Quick Demo")
+
+    st.info(
+        "Don't have a chest X-ray? Try one of our sample images or download them."
+    )
+
+    selected_image = None
+
+    col1, col2 = st.columns(2)
+
+    # ---------- NORMAL DEMO ----------
+    with col1:
+
+        st.image(
+            "demo_normal.jpg",
+            caption="Normal Sample",
+            use_container_width=True
+        )
+
+        if st.button("Use Normal Demo"):
+            selected_image = Image.open(
+                "demo_normal.jpg"
+            ).convert("RGB")
+
+        with open("demo_normal.jpg", "rb") as file:
+            st.download_button(
+                label="⬇ Download",
+                data=file,
+                file_name="demo_normal.jpg",
+                mime="image/jpeg",
+                key="normal_download"
+            )
+
+    # ---------- PNEUMONIA DEMO ----------
+    with col2:
+
+        st.image(
+            "demo_pneumonia.jpg",
+            caption="Pneumonia Sample",
+            use_container_width=True
+        )
+
+        if st.button("Use Pneumonia Demo"):
+            selected_image = Image.open(
+                "demo_pneumonia.jpg"
+            ).convert("RGB")
+
+        with open("demo_pneumonia.jpg", "rb") as file:
+            st.download_button(
+                label="⬇ Download",
+                data=file,
+                file_name="demo_pneumonia.jpg",
+                mime="image/jpeg",
+                key="pneumonia_download"
+            )
+
+   
 
 # ------------------ ABOUT PAGE ------------------
 elif page == "About Pneumonia":
