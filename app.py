@@ -74,7 +74,6 @@ transform = transforms.Compose([
 # ------------------ HOME PAGE ------------------
 if page == "Home":
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
 # ---------------- UPLOAD FIRST ----------------
     st.subheader("Upload Chest X-ray")
 
@@ -106,14 +105,14 @@ if page == "Home":
 
         if st.button("Use Normal Demo"):
             selected_image = Image.open(
-                "demo_normal.png"
+                "demo_normal.jpg"
             ).convert("RGB")
 
-        with open("demo_normal.png", "rb") as file:
+        with open("demo_normal.jpg", "rb") as file:
             st.download_button(
-                "⬇ Download",
+                "Download",
                 file,
-                "demo_normal.png",
+                "demo_normal.jpg",
                 key="normal_download"
             )
 
@@ -132,7 +131,7 @@ if page == "Home":
 
         with open("demo_pneumonia.jpg", "rb") as file:
             st.download_button(
-                "⬇ Download",
+                "Download",
                 file,
                 "demo_pneumonia.jpg",
                 key="pneumonia_download"
@@ -185,8 +184,6 @@ especially in elderly and immunocompromised patients.
 
 # ------------------ CONTACT PAGE ------------------
 elif page == "Contact":
-
-    st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("Contact Developer")
     st.write("Developed by: **Srishti Bhatt**")
     st.write("Email: srishtibhatt100@gmail.com")
