@@ -84,6 +84,8 @@ if page == "Home":
     "Analyze X-ray",
     type="primary"
     )
+    if uploaded_file is not None and analyze_btn:
+        st.success( "Analysis started. Please scroll down to view the report." )
 
 # ---------------- DEMO SECTION ----------------
     st.subheader("Quick Demo")
@@ -190,7 +192,6 @@ if page == "Home":
             "Educational Prototype Only. "
             "This prediction is not a medical diagnosis."
         )
-        st.success( "Analysis Complete! Scroll down to view the diagnosis report." )
         st.subheader("Prediction Result")
 
         if probability > 0.5:
