@@ -116,16 +116,13 @@ if page == "Home":
     image = None
 
     if uploaded_file is not None and analyze_btn:
-        st.success("Analysis Complete! Scroll down to view the diagnosis report and Grad-CAM visualization.")
-
-
-
         image = Image.open(uploaded_file).convert("RGB")
 
     elif selected_image is not None:
         image = selected_image
 # ---------------- PREDICTION ----------------
     if image is not None:
+        with st.spinner("Analyzing X-ray..."):
         input_tensor = transform(image).unsqueeze(0).to(device)
 
         gradients = []
@@ -191,10 +188,10 @@ if page == "Home":
         )
 
         st.warning(
-            "⚠ Educational Prototype Only. "
+            "Educational Prototype Only. "
             "This prediction is not a medical diagnosis."
         )
-
+        st.success( "Analysis Complete! Scroll down to view the diagnosis report." )
         st.subheader("Prediction Result")
 
         if probability > 0.5:
