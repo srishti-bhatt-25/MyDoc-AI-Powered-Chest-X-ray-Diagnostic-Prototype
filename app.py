@@ -99,14 +99,9 @@ if page == "Home":
 
         st.image(
             "demo_normal.jpg",
-            caption="Normal Sample",
+            caption="Sample X-ray",
             use_container_width=True
         )
-
-        if st.button("Use Normal Demo"):
-            selected_image = Image.open(
-                "demo_normal.jpg"
-            ).convert("RGB")
 
         with open("demo_normal.jpg", "rb") as file:
             st.download_button(
