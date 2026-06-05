@@ -270,7 +270,6 @@ if page == "Home":
         handle_bw.remove()
 
     st.markdown('</div>', unsafe_allow_html=True)
-```
 
 # ------------------ ABOUT PAGE ------------------
 elif page == "About Pneumonia":
