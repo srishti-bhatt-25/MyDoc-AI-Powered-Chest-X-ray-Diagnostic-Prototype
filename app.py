@@ -5,6 +5,9 @@ from torchvision import models, transforms
 from PIL import Image
 import numpy as np
 import cv2
+import os
+
+st.write(os.listdir("."))
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(page_title="MyDoc AI", layout="centered")
