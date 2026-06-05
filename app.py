@@ -72,7 +72,6 @@ transform = transforms.Compose([
                          [0.229, 0.224, 0.225])
 ])
 # ------------------ HOME PAGE ------------------
-```python
 if page == "Home":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
