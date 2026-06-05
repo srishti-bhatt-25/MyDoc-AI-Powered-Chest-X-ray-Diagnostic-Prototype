@@ -83,10 +83,7 @@ if page == "Home":
     )
 
 # ---------------- DEMO SECTION ----------------
-    st.divider()
-
     st.subheader("Quick Demo")
-
     st.info(
         "Don't have a chest X-ray? Try one of our sample images or download them."
     )
@@ -122,9 +119,6 @@ if page == "Home":
         image = selected_image
 # ---------------- PREDICTION ----------------
     if image is not None:
-
-        st.divider()
-
         input_tensor = transform(image).unsqueeze(0).to(device)
 
         gradients = []
@@ -222,8 +216,6 @@ if page == "Home":
 
 # ------------------ ABOUT PAGE ------------------
 elif page == "About Pneumonia":
-
-    st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("What is Pneumonia?")
     st.write("""
 Pneumonia is a lung infection that causes inflammation in the air sacs (alveoli).
