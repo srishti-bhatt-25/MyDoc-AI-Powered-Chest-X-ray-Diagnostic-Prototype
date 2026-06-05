@@ -98,7 +98,7 @@ if page == "Home":
     with col1:
 
         st.image(
-            "demo_normal.png",
+            "demo_normal.jpg",
             caption="Normal Sample",
             use_container_width=True
         )
